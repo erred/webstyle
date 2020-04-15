@@ -1,0 +1,14 @@
+{{ if .AMP }}
+<amp-analytics type="gtag" data-credentials="include">
+<script type="application/json">
+{
+  "vars": {
+    "gtag_id": "{{ .GAID }}",
+    "config": {
+      "{{ .GAID }}": { "groups": "default" }
+    }
+  }
+}
+</script>
+</amp-analytics>
+{{ end }}
