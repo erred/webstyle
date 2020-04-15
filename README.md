@@ -43,7 +43,7 @@ assumes [layout](#layout)
   <body>
     <header>
       {{ template "LogoHtml" }}
-      <!-- optiona parts -->
+      <!-- optional parts -->
     </header>
 
     <main>
