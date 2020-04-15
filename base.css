@@ -7,6 +7,37 @@
   font: 18px "Inconsolata", monospace;
 }
 
+@font-face {
+  font-family: "Inconsolata";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local("Inconsolata Regular"), local("Inconsolata-Regular"),
+    url(https://fonts.gstatic.com/s/inconsolata/v18/QldKNThLqRwH-OJ1UHjlKFle.ttf) format("truetype");
+}
+@font-face {
+  font-family: "Inconsolata";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local("Inconsolata Bold"), local("Inconsolata-Bold"),
+    url(https://fonts.gstatic.com/s/inconsolata/v18/QldXNThLqRwH-OJ1UHjlKGHiw41u.ttf) format("truetype");
+}
+@font-face {
+  font-family: "Lora";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/lora/v15/0QI6MX1D_JOuGQbT0gvTJPa787weuyJG.ttf) format("truetype");
+}
+@font-face {
+  font-family: "Lora";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/lora/v15/0QI6MX1D_JOuGQbT0gvTJPa787z5vCJG.ttf) format("truetype");
+}
+
 /* ===== layout general ===== */
 body {
   display: flex;
@@ -168,9 +199,4 @@ em {
 }
 time {
   color: #999;
-}
-
-/* ===== hide recaptcha ===== */
-.grecaptcha-badge {
-  visibility: hidden;
 }

@@ -14,7 +14,36 @@ import "go.seankhliao.com/webstyle"
 
 ### components
 
-##### base css
+#### layout
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- head things -->
+    <style>
+      {{ template "BaseCss" }}
+    </style>
+  </head>
+  <body>
+    <header>
+      {{ template "LogoHtml" }}
+      <!-- optional parts -->
+    </header>
+
+    <main>
+      <! --
+        main content
+        see base.css
+      -->
+    </main>
+
+    {{ template "FooterHtml" }}
+  </body>
+</html>
+```
+
+#### base css
 
 ```html
 <style>
@@ -24,52 +53,19 @@ import "go.seankhliao.com/webstyle"
 
 assumes [layout](#layout)
 
-##### fonts
-
-```html
-<style>
-  {{ template "FontsCss" }}
-</style>
-```
-
-##### layout
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    {{ template "HeadGohtml" . }}
-  </head>
-  <body>
-    <header>
-      {{ template "LogoHtml" }}
-      <!-- optional parts -->
-    </header>
-
-    <main>
-      {{ .Main }}
-    </main>
-
-    {{ template "FooterHtml" }}
-  </body>
-</html>
-```
-
-##### head
-
-##### header
+#### header
 
 ```html
 <header>
   {{ template "LogoHtml" }}
-  <!-- optional
+  <!-- optional parts
   <h2>A subtitle</h2>
   <p>A tagline</p>
   -->
 </header>
 ```
 
-##### footer
+#### footer
 
 ```html
 {{ template "FooterHtml" }}
@@ -86,6 +82,8 @@ assumes [layout](#layout)
 ```
 
 ## develop
+
+edit html / css files
 
 ```sh
 go generate
