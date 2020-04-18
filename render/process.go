@@ -99,8 +99,10 @@ func processFill(o Options, pages []*Page) ([]*Page, error) {
 	for i, p := range pages {
 		if strings.HasPrefix(p.name, "blog") {
 			if p.name != "blog/index.html" {
+				pages[i].Date = filepath.Base(p.name)[:10]
 				pages[i].Header = fmt.Sprintf(`<h2><a href="/blog/" ping="%s?trigger=ping&src=%s&dst=%s">b<em>log</em></a></h2>`, o.URLLogger, p.URLCanonical, "/blog/") +
 					"\n" + fmt.Sprintf(`<p><time datetime="%s">%s</time></p>`, p.Date, p.Date)
+
 				buf.WriteString(fmt.Sprintf(`<li><time datetime="%s">%s</time> | <a href="%s" ping="%s?trigger=ping&src=%s&dst=%s">%s</a></li>`+"\n", p.Date, p.Date, p.URLAbsolute, o.URLLogger, "/blog/", p.URLCanonical, p.Title))
 
 				feed.Entry = append(feed.Entry, &atom.Entry{
