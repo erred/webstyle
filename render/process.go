@@ -25,6 +25,8 @@ type Options struct {
 	GoogleAnalytics string
 	URLBase         string
 	URLLogger       string
+
+	SingleFile bool
 }
 
 func (o *Options) InitFlags(fs *flag.FlagSet) {
@@ -33,31 +35,36 @@ func (o *Options) InitFlags(fs *flag.FlagSet) {
 	fs.StringVar(&o.GoogleAnalytics, "ga", "UA-114337586-1", "google analytics id")
 	fs.StringVar(&o.URLBase, "base", "https://seankhliao.com", "base url")
 	fs.StringVar(&o.URLLogger, "logger", "https://statslogger.seankhliao.com/api", "statslogger url")
+	fs.BoolVar(&o.SingleFile, "single", false, "single file mode")
 }
 
 func Process(o Options) error {
-	pages, err := processInput(o.In)
+	pages, err := processInput(o)
 	if err != nil {
 		return fmt.Errorf("Process input: %w", err)
 	}
-	pages, err = processFill(pages, o)
+	pages, err = processFill(o, pages)
 	if err != nil {
 		return fmt.Errorf("Process fill: %w", err)
 	}
-	err = processOutput(o.Out, pages, o.Template)
+	err = processOutput(o, pages)
 	if err != nil {
 		return fmt.Errorf("Process output: %w", err)
 	}
 	return nil
 }
 
-func processFill(pages []*Page, o Options) ([]*Page, error) {
+func processFill(o Options, pages []*Page) ([]*Page, error) {
 	for i := range pages {
 		pages[i].GoogleAnalytics = o.GoogleAnalytics
 		pages[i].URLBase = o.URLBase
 		pages[i].URLLogger = o.URLLogger
 		pages[i].URLAbsolute = canonical(pages[i].name)
 		pages[i].URLCanonical = o.URLBase + pages[i].URLAbsolute
+	}
+
+	if o.SingleFile {
+		return pages, nil
 	}
 
 	sort.Slice(pages, func(i, j int) bool { return pages[i].name > pages[j].name })
@@ -146,9 +153,78 @@ func processFill(pages []*Page, o Options) ([]*Page, error) {
 	return pages, nil
 }
 
-func processInput(in string) ([]*Page, error) {
+func processInput(o Options) ([]*Page, error) {
 	var pages []*Page
-	err := filepath.Walk(in, func(p string, i os.FileInfo, err error) error {
+	if o.SingleFile {
+		i, err := os.Stat(o.In)
+		if err != nil {
+			return nil, fmt.Errorf("single file mode %s: %w", o.In, err)
+		}
+		if i.IsDir() {
+			return nil, fmt.Errorf("single file mode unexpected directory")
+		}
+		err = walker(o.In, &pages)(o.In, i, nil)
+		if err != nil {
+			return nil, fmt.Errorf("single file mode %s: %w", o.In, err)
+		}
+		return pages, nil
+	}
+
+	err := filepath.Walk(o.In, walker(o.In, &pages))
+	if err != nil {
+		return nil, err
+	}
+	return pages, nil
+}
+
+func processOutput(o Options, pages []*Page) error {
+	var wg sync.WaitGroup
+	errc := make(chan error, len(pages))
+	wg.Add(len(pages))
+
+	for _, p := range pages {
+		if !o.SingleFile {
+			os.MkdirAll(filepath.Dir(filepath.Join(o.Out, p.name)), 0755)
+		}
+		go func(p *Page) {
+			defer wg.Done()
+			fo, err := os.Create(filepath.Join(o.Out, p.name))
+			if err != nil {
+				errc <- fmt.Errorf("create %s: %w", p.name, err)
+				return
+			}
+			defer fo.Close()
+
+			if p.pass {
+				_, err = fo.Write(p.data)
+				if err != nil {
+					errc <- fmt.Errorf("write %s: %w", p.name, err)
+				}
+			} else {
+				err = o.Template.ExecuteTemplate(fo, "LayoutGohtml", p)
+				if err != nil {
+					errc <- fmt.Errorf("execute %s: %w", p.name, err)
+					return
+				}
+			}
+		}(p)
+	}
+
+	wg.Wait()
+	close(errc)
+	var errs []error
+	for e := range errc {
+		errs = append(errs, e)
+	}
+	if len(errs) != 0 {
+		return fmt.Errorf("output: %v", errs)
+	}
+	return nil
+}
+
+func walker(in string, ppages *[]*Page) func(p string, i os.FileInfo, err error) error {
+	pages := *ppages
+	return func(p string, i os.FileInfo, err error) error {
 		if i.IsDir() || err != nil {
 			return err
 		}
@@ -169,55 +245,9 @@ func processInput(in string) ([]*Page, error) {
 			return fmt.Errorf("process %s: %w", p, err)
 		}
 		pages = append(pages, page)
+		*ppages = pages
 		return nil
-	})
-	if err != nil {
-		return nil, err
 	}
-	return pages, nil
-}
-
-func processOutput(out string, pages []*Page, tmpl *template.Template) error {
-	var wg sync.WaitGroup
-	errc := make(chan error, len(pages))
-	wg.Add(len(pages))
-
-	for _, p := range pages {
-		os.MkdirAll(filepath.Dir(filepath.Join(out, p.name)), 0755)
-		go func(p *Page) {
-			defer wg.Done()
-			fo, err := os.Create(filepath.Join(out, p.name))
-			if err != nil {
-				errc <- fmt.Errorf("create %s: %w", p.name, err)
-				return
-			}
-			defer fo.Close()
-
-			if p.pass {
-				_, err = fo.Write(p.data)
-				if err != nil {
-					errc <- fmt.Errorf("write %s: %w", p.name, err)
-				}
-			} else {
-				err = tmpl.ExecuteTemplate(fo, "LayoutGohtml", p)
-				if err != nil {
-					errc <- fmt.Errorf("execute %s: %w", p.name, err)
-					return
-				}
-			}
-		}(p)
-	}
-
-	wg.Wait()
-	close(errc)
-	var errs []error
-	for e := range errc {
-		errs = append(errs, e)
-	}
-	if len(errs) != 0 {
-		return fmt.Errorf("output: %v", errs)
-	}
-	return nil
 }
 
 func canonical(p string) string {
