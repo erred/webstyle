@@ -41,15 +41,15 @@ func (o *Options) InitFlags(fs *flag.FlagSet) {
 func Process(o Options) error {
 	pages, err := processInput(o)
 	if err != nil {
-		return fmt.Errorf("Process input: %w", err)
+		return fmt.Errorf("process: %w", err)
 	}
 	pages, err = processFill(o, pages)
 	if err != nil {
-		return fmt.Errorf("Process fill: %w", err)
+		return fmt.Errorf("process: %w", err)
 	}
 	err = processOutput(o, pages)
 	if err != nil {
-		return fmt.Errorf("Process output: %w", err)
+		return fmt.Errorf("process: %w", err)
 	}
 	return nil
 }
@@ -131,7 +131,7 @@ func processFill(o Options, pages []*Page) ([]*Page, error) {
 	xenc.Indent("", "\t")
 	err := xenc.Encode(feed)
 	if err != nil {
-		return nil, fmt.Errorf("encode atom: %w", err)
+		return nil, fmt.Errorf("fill encode atom: %w", err)
 	}
 	p, err := NewPage("feed.atom", bb.Bytes(), true)
 	if err != nil {
@@ -158,21 +158,21 @@ func processInput(o Options) ([]*Page, error) {
 	if o.SingleFile {
 		i, err := os.Stat(o.In)
 		if err != nil {
-			return nil, fmt.Errorf("single file mode %s: %w", o.In, err)
+			return nil, fmt.Errorf("input single %s: %w", o.In, err)
 		}
 		if i.IsDir() {
-			return nil, fmt.Errorf("single file mode unexpected directory")
+			return nil, fmt.Errorf("input single unexpected directory")
 		}
 		err = walker(o.In, &pages)(o.In, i, nil)
 		if err != nil {
-			return nil, fmt.Errorf("single file mode %s: %w", o.In, err)
+			return nil, fmt.Errorf("input single %s: %w", o.In, err)
 		}
 		return pages, nil
 	}
 
 	err := filepath.Walk(o.In, walker(o.In, &pages))
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("input dir %s: %w", o.In, err)
 	}
 	return pages, nil
 }
@@ -185,6 +185,8 @@ func processOutput(o Options, pages []*Page) error {
 	for _, p := range pages {
 		if !o.SingleFile {
 			os.MkdirAll(filepath.Dir(filepath.Join(o.Out, p.name)), 0755)
+		} else {
+			o.Out = ""
 		}
 		go func(p *Page) {
 			defer wg.Done()
@@ -228,9 +230,11 @@ func walker(in string, ppages *[]*Page) func(p string, i os.FileInfo, err error)
 		if i.IsDir() || err != nil {
 			return err
 		}
-		sp, err := filepath.Rel(in, p)
-		if err != nil {
-			return fmt.Errorf("rel: %v", err)
+		if in != p {
+			p, err = filepath.Rel(in, p)
+			if err != nil {
+				return fmt.Errorf("rel: %v", err)
+			}
 		}
 		var pass bool
 		if filepath.Ext(p) != ".md" {
@@ -240,7 +244,7 @@ func walker(in string, ppages *[]*Page) func(p string, i os.FileInfo, err error)
 		if err != nil {
 			return fmt.Errorf("read %s: %w", p, err)
 		}
-		page, err := NewPage(sp, b, pass)
+		page, err := NewPage(p, b, pass)
 		if err != nil {
 			return fmt.Errorf("process %s: %w", p, err)
 		}
