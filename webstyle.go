@@ -53,6 +53,11 @@ body {
   display: flex;
   flex-flow: column nowrap;
   margin: 0;
+
+  /* ==override newtab page == */
+  background: #000;
+  color: #eceff1;
+  font: 18px "Inconsolata", monospace;
 }
 
 /* ===== layout header ===== */
@@ -263,7 +268,7 @@ time {
         HeadGohtml = `{{ define "HeadGohtml" }}
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src *; connect-src *.seankhliao.com  www.google-analytics.com; font-src 'self' https://fonts.gstatic.com;">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src *; connect-src *.seankhliao.com  www.google-analytics.com; font-src 'self' https://fonts.gstatic.com; manifest-src 'self';">
 
 <title>{{ .Title }}</title>
 

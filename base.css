@@ -43,6 +43,11 @@ body {
   display: flex;
   flex-flow: column nowrap;
   margin: 0;
+
+  /* ==override newtab page == */
+  background: #000;
+  color: #eceff1;
+  font: 18px "Inconsolata", monospace;
 }
 
 /* ===== layout header ===== */
