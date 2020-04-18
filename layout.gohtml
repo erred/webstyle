@@ -28,8 +28,20 @@
         navigator.sendBeacon(`{{ .URLLogger }}?trigger=beacon&src={{ .URLCanonical }}&dst=${dst}&dur=${ts1 - ts0}ms`);
       });
     </script>
+
+    {{ if .GoogleAnalytics }}
+    <script>
+      "use strict";
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "{{ .GoogleAnalytics }}");
+    </script>
     <script>
       {{ template "GtagJs" }}
     </script>
+    {{ end }}
   </body>
 </html>

@@ -263,6 +263,7 @@ time {
         HeadGohtml = `{{ define "HeadGohtml" }}
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src *; connect-src *.seankhliao.com  www.google-analytics.com; font-src 'self' https://fonts.gstatic.com;">
 
 <title>{{ .Title }}</title>
 
@@ -283,14 +284,6 @@ time {
 {{ template "BaseCss" }}
 {{ .Style }}
 </style>
-
-<script>
-"use strict";
-window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag("js", new Date());
-gtag("config", "{{ .GoogleAnalytics }}");
-</script>
 {{ end }}`
         
         LayoutGohtml = `{{ define "LayoutGohtml" }}
@@ -324,9 +317,21 @@ gtag("config", "{{ .GoogleAnalytics }}");
         navigator.sendBeacon(`+"`"+`{{ .URLLogger }}?trigger=beacon&src={{ .URLCanonical }}&dst=${dst}&dur=${ts1 - ts0}ms`+"`"+`);
       });
     </script>
+
+    {{ if .GoogleAnalytics }}
+    <script>
+      "use strict";
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "{{ .GoogleAnalytics }}");
+    </script>
     <script>
       {{ template "GtagJs" }}
     </script>
+    {{ end }}
   </body>
 </html>
 {{ end }}`
