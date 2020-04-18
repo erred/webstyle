@@ -6,5 +6,6 @@ COPY . .
 RUN go build -o /bin/webrender ./cmd/webrender
 
 FROM scratch
-COPY --from=base /bin/webrender /bin/
+
+COPY --from=build /bin/webrender /bin/
 ENTRYPOINT [ "/bin/webrender" ]
