@@ -312,6 +312,19 @@ gtag("config", "{{ .GoogleAnalytics }}");
     {{ template "FooterHtml" }}
 
     <script>
+      let ts0 = new Date();
+      let dst = "";
+      document.querySelectorAll("a").forEach((el) => {
+        el.addEventListener("click", (e) => {
+          dst = e.target.href.replace(/(^\w+:|^)\/\//, "");
+        });
+      });
+      window.addEventListener("unload", () => {
+        ts1 = new Date();
+        navigator.sendBeacon(`+"`"+`{{ .URLLogger }}?trigger=beacon&src={{ .URLCanonical }}&dst=${dst}&dur=${ts1 - ts0}ms`+"`"+`);
+      });
+    </script>
+    <script>
       {{ template "GtagJs" }}
     </script>
   </body>
