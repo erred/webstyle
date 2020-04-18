@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {{ template "HeadGohtml" . }}
+  </head>
+  <body>
+    <header>
+      {{ template "LogoHtml" }}
+      {{ .Header }}
+    </header>
+
+    <main>
+      {{ .Main }}
+    </main>
+
+    {{ template "FooterHtml" }}
+
+    <script>
+      {{ template "GtagJs" }}
+    </script>
+  </body>
+</html>

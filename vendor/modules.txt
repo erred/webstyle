@@ -1,0 +1,14 @@
+# github.com/russross/blackfriday/v2 v2.0.1
+## explicit
+github.com/russross/blackfriday/v2
+# github.com/shurcooL/sanitized_anchor_name v1.0.0
+## explicit
+github.com/shurcooL/sanitized_anchor_name
+# golang.org/x/tools v0.0.0-20200417140056-c07e33ef3290
+## explicit
+golang.org/x/tools/blog/atom
+# gopkg.in/yaml.v2 v2.2.8
+gopkg.in/yaml.v2
+# sigs.k8s.io/yaml v1.2.0
+## explicit
+sigs.k8s.io/yaml
