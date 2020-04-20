@@ -34,7 +34,7 @@ func (o *Options) InitFlags(fs *flag.FlagSet) {
 	fs.StringVar(&o.Out, "out", "public", "output directory")
 	fs.StringVar(&o.GoogleAnalytics, "ga", "UA-114337586-1", "google analytics id")
 	fs.StringVar(&o.URLBase, "base", "https://seankhliao.com", "base url")
-	fs.StringVar(&o.URLLogger, "logger", "https://statslogger.seankhliao.com/api", "statslogger url")
+	fs.StringVar(&o.URLLogger, "logger", "https://statslogger.seankhliao.com/form", "statslogger url")
 	fs.BoolVar(&o.SingleFile, "single", false, "single file mode")
 }
 
