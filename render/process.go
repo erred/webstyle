@@ -232,12 +232,6 @@ func walker(in string, ppages *[]*Page) func(p string, i os.FileInfo, err error)
 		if i.IsDir() || err != nil {
 			return err
 		}
-		if in != p {
-			p, err = filepath.Rel(in, p)
-			if err != nil {
-				return fmt.Errorf("rel: %v", err)
-			}
-		}
 		var pass bool
 		if filepath.Ext(p) != ".md" {
 			pass = true
@@ -245,6 +239,12 @@ func walker(in string, ppages *[]*Page) func(p string, i os.FileInfo, err error)
 		b, err := ioutil.ReadFile(p)
 		if err != nil {
 			return fmt.Errorf("read %s: %w", p, err)
+		}
+		if in != p {
+			p, err = filepath.Rel(in, p)
+			if err != nil {
+				return fmt.Errorf("rel: %v", err)
+			}
 		}
 		page, err := NewPage(p, b, pass)
 		if err != nil {
