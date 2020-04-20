@@ -268,7 +268,7 @@ time {
         HeadGohtml = `{{ define "HeadGohtml" }}
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src *; connect-src *.seankhliao.com  www.google-analytics.com; font-src 'self' https://fonts.gstatic.com; manifest-src 'self';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src-elem 'https://www.google-analytics.com'; font-src 'self' https://fonts.gstatic.com; connect-src *.seankhliao.com  www.google-analytics.com; img-src *;">
 
 <title>{{ .Title }}</title>
 
