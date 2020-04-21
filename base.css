@@ -101,8 +101,8 @@ main > * {
   grid-column: 2 / span 1;
 }
 main > picture,
-main > amp-img,
-main > pre {
+main > pre,
+main > table {
   grid-column: 1 / span 3;
 }
 picture img {
@@ -204,4 +204,24 @@ em {
 }
 time {
   color: #999;
+}
+
+table {
+  border-collapse: collapse;
+  border-style: hidden;
+}
+th,
+td {
+  padding: 0.4em;
+  text-align: left;
+}
+th {
+  font-weight: 700;
+  border-bottom: 0.2em solid #999;
+}
+tr:nth-child(5n) td {
+  border-bottom: 0.1em solid #999;
+}
+tbody tr:hover {
+  background: #404040;
 }
