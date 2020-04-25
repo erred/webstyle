@@ -26,5 +26,5 @@ steps:
       - --single-snapshot
 secrets:
   - kmsKeyName: projects/com-seankhliao/locations/global/keyRings/cloudbuilder/cryptoKeys/default
-secretEnv:
-  DOCKERTOKEN: CiQA7y9SxcYS+I4dHTEC3U8ze+e8Bsuu0tAbnkZjoXy0b9NIxIISTQBb0+9rHFSnCtaURoiRmIf1rBia28+NezZRw6FEiF4msK1RO+xiPNKEbwRZPZ2g0fMQfyG+TMVgDrYKBoXYD+Ze4SQjltZq29nF8Vr1
+    secretEnv:
+      DOCKERTOKEN: CiQA7y9SxcYS+I4dHTEC3U8ze+e8Bsuu0tAbnkZjoXy0b9NIxIISTQBb0+9rHFSnCtaURoiRmIf1rBia28+NezZRw6FEiF4msK1RO+xiPNKEbwRZPZ2g0fMQfyG+TMVgDrYKBoXYD+Ze4SQjltZq29nF8Vr1
