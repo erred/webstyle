@@ -28,7 +28,7 @@ steps:
       - --single-snapshot
     volumes:
       - name: login
-        path: /kaniko/docker
+        path: /kaniko/.docker
 # secrets:
 #   - kmsKeyName: projects/com-seankhliao/locations/global/keyRings/cloudbuilder/cryptoKeys/default
 #     secretEnv:
