@@ -10,9 +10,9 @@ steps:
     entrypoint: /bin/bash
     args:
       - -c
-      - docker login --username=seankhliao --password=$$PASSWORD
+      - docker login --username=seankhliao --password=$$DOCKERTOKEN
     secretEnv:
-      - PASSWORD
+      - DOCKERTOKEN
   - id: build-push
     name: gcr.io/kaniko-project/executor:latest
     args:
