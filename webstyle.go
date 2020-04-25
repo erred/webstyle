@@ -237,129 +237,6 @@ tbody tr:hover {
 }
 {{ end }}`
         
-        LoaderCss = `{{ define "LoaderCss" }}
-.loader {
-  display: grid;
-  grid-gap: 2px;
-  grid-template: repeat(3, 1fr) / repeat(3, 1fr);
-  height: 48px;
-  margin: 5em auto;
-  place-items: stretch;
-  width: 48px;
-}
-.loader div {
-  background: #333;
-  animation: loader 1.8s infinite ease-in-out;
-}
-.loader div:nth-child(5) {
-  background: #a06be0;
-}
-.loader div:nth-child(7) {
-  animation-delay: 0s;
-}
-.loader div:nth-child(4),
-.loader div:nth-child(8) {
-  animation-delay: 0.3s;
-}
-.loader div:nth-child(1),
-.loader div:nth-child(5),
-.loader div:nth-child(9) {
-  animation-delay: 0.6s;
-}
-.loader div:nth-child(2),
-.loader div:nth-child(6) {
-  animation-delay: 0.9s;
-}
-.loader div:nth-child(3) {
-  animation-delay: 1.2s;
-}
-@keyframes loader {
-  0%,
-  70%,
-  100% {
-    transform: scale3D(1, 1, 1);
-  }
-  35% {
-    transform: scale3D(0, 0, 1);
-  }
-}
-{{ end }}`
-        
-        HeadGohtml = `{{ define "HeadGohtml" }}
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
-
-<title>{{ .Title }}</title>
-
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-<link rel="canonical" href="{{ .URLCanonical }}" />
-<link rel="manifest"  href="/manifest.json" />
-<link rel="alternate" type="application/atom+xml" title="seankhliao.com" href="https://seankhliao.com/feed.atom" />
-
-<meta name="theme-color" content="#000000">
-<meta name="description" content="{{ .Description }}">
-
-<link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png" />
-<link rel="apple-touch-icon" href="/icon-512.png" />
-<link rel="shortcut icon" href="/favicon.ico" />
-
-<style>
-{{ template "BaseCss" }}
-{{ .Style }}
-</style>
-{{ end }}`
-        
-        LayoutGohtml = `{{ define "LayoutGohtml" }}
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    {{ template "HeadGohtml" . }}
-  </head>
-  <body>
-    <header>
-      {{ template "LogoHtml" }}
-      {{ .Header }}
-    </header>
-
-    <main>
-      {{ .Main }}
-    </main>
-
-    {{ template "FooterHtml" }}
-
-    <script>
-      let ts0 = new Date();
-      let dst = "";
-      document.querySelectorAll("a").forEach((el) => {
-        el.addEventListener("click", (e) => {
-          dst = e.target.href.replace(/(^\w+:|^)\/\//, "");
-        });
-      });
-      window.addEventListener("unload", () => {
-        ts1 = new Date();
-        navigator.sendBeacon(`+"`"+`{{ .URLLogger }}?trigger=beacon&src={{ .URLCanonical }}&dst=${dst}&dur=${ts1 - ts0}ms`+"`"+`);
-      });
-    </script>
-
-    {{ if .GoogleAnalytics }}
-    <script>
-      "use strict";
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag("js", new Date());
-      gtag("config", "{{ .GoogleAnalytics }}");
-    </script>
-    <script>
-      {{ template "GtagJs" }}
-    </script>
-    {{ end }}
-  </body>
-</html>
-{{ end }}`
-        
         FooterHtml = `{{ define "FooterHtml" }}
 <footer>
   <a href="https://seankhliao.com/">home</a>
@@ -372,39 +249,6 @@ tbody tr:hover {
   |
   <a href="https://github.com/seankhliao">github</a>
 </footer>
-{{ end }}`
-        
-        LoaderHtml = `{{ define "LoaderHtml" }}
-<div class="loader">
-  <div></div>
-  <div></div>
-  <div></div>
-  <div></div>
-  <div></div>
-  <div></div>
-  <div></div>
-  <div></div>
-  <div></div>
-</div>
-{{ end }}`
-        
-        LogoHtml = `{{ define "LogoHtml" }}
-<h1>
-  <a href="/">
-    <span>S</span>
-    <span>E</span>
-    <span>A</span>
-    <span>N</span>
-    <em>K</em>
-    <em>.</em>
-    <em>H</em>
-    <em>.</em>
-    <span>L</span>
-    <span>I</span>
-    <span>A</span>
-    <span>O</span>
-  </a>
-</h1>
 {{ end }}`
         
         GtagJs = `{{ define "GtagJs" }}
@@ -638,6 +482,162 @@ cn();
 })()
 {{ end }}`
         
+        HeadGohtml = `{{ define "HeadGohtml" }}
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+
+<title>{{ .Title }}</title>
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link rel="canonical" href="{{ .URLCanonical }}" />
+<link rel="manifest"  href="/manifest.json" />
+<link rel="alternate" type="application/atom+xml" title="seankhliao.com" href="https://seankhliao.com/feed.atom" />
+
+<meta name="theme-color" content="#000000">
+<meta name="description" content="{{ .Description }}">
+
+<link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png" />
+<link rel="apple-touch-icon" href="/icon-512.png" />
+<link rel="shortcut icon" href="/favicon.ico" />
+
+<style>
+{{ template "BaseCss" }}
+{{ .Style }}
+</style>
+{{ end }}`
+        
+        LayoutGohtml = `{{ define "LayoutGohtml" }}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {{ template "HeadGohtml" . }}
+  </head>
+  <body>
+    <header>
+      {{ template "LogoHtml" }}
+      {{ .Header }}
+    </header>
+
+    <main>
+      {{ .Main }}
+    </main>
+
+    {{ template "FooterHtml" }}
+
+    <script>
+      let ts0 = new Date();
+      let dst = "";
+      document.querySelectorAll("a").forEach((el) => {
+        el.addEventListener("click", (e) => {
+          dst = e.target.href.replace(/(^\w+:|^)\/\//, "");
+        });
+      });
+      window.addEventListener("unload", () => {
+        ts1 = new Date();
+        navigator.sendBeacon(`+"`"+`{{ .URLLogger }}?trigger=beacon&src={{ .URLCanonical }}&dst=${dst}&dur=${ts1 - ts0}ms`+"`"+`);
+      });
+    </script>
+
+    {{ if .GoogleAnalytics }}
+    <script>
+      "use strict";
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "{{ .GoogleAnalytics }}");
+    </script>
+    <script>
+      {{ template "GtagJs" }}
+    </script>
+    {{ end }}
+  </body>
+</html>
+{{ end }}`
+        
+        LoaderCss = `{{ define "LoaderCss" }}
+.loader {
+  display: grid;
+  grid-gap: 2px;
+  grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+  height: 48px;
+  margin: 5em auto;
+  place-items: stretch;
+  width: 48px;
+}
+.loader div {
+  background: #333;
+  animation: loader 1.8s infinite ease-in-out;
+}
+.loader div:nth-child(5) {
+  background: #a06be0;
+}
+.loader div:nth-child(7) {
+  animation-delay: 0s;
+}
+.loader div:nth-child(4),
+.loader div:nth-child(8) {
+  animation-delay: 0.3s;
+}
+.loader div:nth-child(1),
+.loader div:nth-child(5),
+.loader div:nth-child(9) {
+  animation-delay: 0.6s;
+}
+.loader div:nth-child(2),
+.loader div:nth-child(6) {
+  animation-delay: 0.9s;
+}
+.loader div:nth-child(3) {
+  animation-delay: 1.2s;
+}
+@keyframes loader {
+  0%,
+  70%,
+  100% {
+    transform: scale3D(1, 1, 1);
+  }
+  35% {
+    transform: scale3D(0, 0, 1);
+  }
+}
+{{ end }}`
+        
+        LoaderHtml = `{{ define "LoaderHtml" }}
+<div class="loader">
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
+</div>
+{{ end }}`
+        
+        LogoHtml = `{{ define "LogoHtml" }}
+<h1>
+  <a href="/">
+    <span>S</span>
+    <span>E</span>
+    <span>A</span>
+    <span>N</span>
+    <em>K</em>
+    <em>.</em>
+    <em>H</em>
+    <em>.</em>
+    <span>L</span>
+    <span>I</span>
+    <span>A</span>
+    <span>O</span>
+  </a>
+</h1>
+{{ end }}`
+        
 )
 
 var (
@@ -649,19 +649,19 @@ func all() *template.Template {
         
         t = template.Must(t.New("BaseCss").Parse(BaseCss))
         
-        t = template.Must(t.New("LoaderCss").Parse(LoaderCss))
+        t = template.Must(t.New("FooterHtml").Parse(FooterHtml))
+        
+        t = template.Must(t.New("GtagJs").Parse(GtagJs))
         
         t = template.Must(t.New("HeadGohtml").Parse(HeadGohtml))
         
         t = template.Must(t.New("LayoutGohtml").Parse(LayoutGohtml))
         
-        t = template.Must(t.New("FooterHtml").Parse(FooterHtml))
+        t = template.Must(t.New("LoaderCss").Parse(LoaderCss))
         
         t = template.Must(t.New("LoaderHtml").Parse(LoaderHtml))
         
         t = template.Must(t.New("LogoHtml").Parse(LogoHtml))
-        
-        t = template.Must(t.New("GtagJs").Parse(GtagJs))
         
         return t
 }

@@ -1,3 +1,3 @@
 package webstyle
 
-//go:generate go run scripts/generate.go -- *.css *.gohtml *.html *.js
+//go:generate go run scripts/generate.go -- src/*
