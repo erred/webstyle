@@ -22,8 +22,8 @@ steps:
       - -f=Dockerfile
       - -d=us.gcr.io/$PROJECT_ID/$_IMG:latest
       - -d=us.gcr.io/$PROJECT_ID/$_IMG:$TAG_NAME
-      - -d=seankhliao/$_IMG:latest
-      - -d=seankhliao/$_IMG:$TAG_NAME
+      - -d=index.docker.io/seankhliao/$_IMG:latest
+      - -d=index.docker.io/seankhliao/$_IMG:$TAG_NAME
       - --reproducible
       - --single-snapshot
     volumes:
