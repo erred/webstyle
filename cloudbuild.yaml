@@ -10,7 +10,7 @@ steps:
     entrypoint: /bin/bash
     args:
       - -c
-      - gcloud secrets versions access latest --secret=docker-hub > /login/config.json
+      - gcloud secrets versions access latest --secret=registries > /login/config.json
     volumes:
       - name: login
         path: /login
