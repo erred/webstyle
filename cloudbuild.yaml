@@ -6,25 +6,30 @@ tags:
   - $COMMIT_SHA
 steps:
   - id: login
-    name: gcr.io/cloud-builders/docker:latest
+    name: gcr.io/cloud-builders/gcloud
     entrypoint: /bin/bash
     args:
       - -c
-      - docker login --username=seankhliao --password=$$DOCKERTOKEN
-    secretEnv:
-      - DOCKERTOKEN
+      - gcloud secrets versions access latest --secret=docker-hub > /login/config.json
+    volumes:
+      - name: login
+        path: /login
+
   - id: build-push
     name: gcr.io/kaniko-project/executor:latest
     args:
-      - --context=.
-      - --dockerfile=./Dockerfile
-      - --destination=us.gcr.io/$PROJECT_ID/$_IMG:latest
-      - --destination=us.gcr.io/$PROJECT_ID/$_IMG:$TAG_NAME
-      - --destination=seankhliao/$_IMG:latest
-      - --destination=seankhliao/$_IMG:$TAG_NAME
+      - -c=.
+      - -f=Dockerfile
+      - -d=us.gcr.io/$PROJECT_ID/$_IMG:latest
+      - -d=us.gcr.io/$PROJECT_ID/$_IMG:$TAG_NAME
+      - -d=seankhliao/$_IMG:latest
+      - -d=seankhliao/$_IMG:$TAG_NAME
       - --reproducible
       - --single-snapshot
-secrets:
-  - kmsKeyName: projects/com-seankhliao/locations/global/keyRings/cloudbuilder/cryptoKeys/default
-    secretEnv:
-      DOCKERTOKEN: CiQA7y9SxcYS+I4dHTEC3U8ze+e8Bsuu0tAbnkZjoXy0b9NIxIISTQBb0+9rHFSnCtaURoiRmIf1rBia28+NezZRw6FEiF4msK1RO+xiPNKEbwRZPZ2g0fMQfyG+TMVgDrYKBoXYD+Ze4SQjltZq29nF8Vr1
+    volumes:
+      - name: login
+        path: /kaniko/docker
+# secrets:
+#   - kmsKeyName: projects/com-seankhliao/locations/global/keyRings/cloudbuilder/cryptoKeys/default
+#     secretEnv:
+#       DOCKERTOKEN: CiQA7y9SxcYS+I4dHTEC3U8ze+e8Bsuu0tAbnkZjoXy0b9NIxIISTQBb0+9rHFSnCtaURoiRmIf1rBia28+NezZRw6FEiF4msK1RO+xiPNKEbwRZPZ2g0fMQfyG+TMVgDrYKBoXYD+Ze4SQjltZq29nF8Vr1
