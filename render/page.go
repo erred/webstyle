@@ -2,6 +2,8 @@ package render
 
 import (
 	"bytes"
+	"fmt"
+	"io/ioutil"
 	"path/filepath"
 	"strings"
 
@@ -30,6 +32,18 @@ type Page struct {
 	URLBase         string // https://... without trailing /
 	URLCanonical    string // URLBase + URLAbsolute
 	URLLogger       string
+}
+
+func NewPageFromFile(fpath string) (*Page, error) {
+	b, err := ioutil.ReadFile(fpath)
+	if err != nil {
+		return nil, fmt.Errorf("read file %s: %w", fpath, err)
+	}
+	var pass bool
+	if filepath.Ext(fpath) != ".md" {
+		pass = true
+	}
+	return NewPage(fpath, b, pass)
 }
 
 // NewPage reates a new page from filename and file contents
