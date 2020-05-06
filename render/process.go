@@ -235,7 +235,7 @@ func blogHeader(date string) string {
 }
 
 func blogLink(date, urlabsolute, title string) string {
-	return fmt.Sprintf(`<li><time datetime="%s">%s</time>|<a href="%s">%s</a></li>`,
+	return fmt.Sprintf(`<li><time datetime="%s">%s</time> | <a href="%s">%s</a></li>`+"\n",
 		date, date, urlabsolute, title)
 }
 
