@@ -63,7 +63,7 @@ func Process(o Options) error {
 		return fmt.Errorf("process: %w", err)
 	}
 	if len(pages) > 1 {
-		pages, err = processFill(pages)
+		pages, err = processFill(pages, o.Out)
 		if err != nil {
 			return fmt.Errorf("process: %w", err)
 		}
@@ -97,7 +97,7 @@ func processInput(o Options) ([]*Page, error) {
 		pages[i].GoogleAnalytics = o.GoogleAnalytics
 		pages[i].URLBase = o.URLBase
 		pages[i].URLLogger = o.URLLogger
-		pages[i].URLAbsolute = canonical(pages[i].name)
+		pages[i].URLAbsolute = canonical(strings.TrimPrefix(pages[i].name, o.In))
 		pages[i].URLCanonical = o.URLBase + pages[i].URLAbsolute
 		if pages[i].name != o.In {
 			r, err := filepath.Rel(o.In, pages[i].name)
@@ -109,7 +109,7 @@ func processInput(o Options) ([]*Page, error) {
 	return pages, nil
 }
 
-func processFill(pages []*Page) ([]*Page, error) {
+func processFill(pages []*Page, out string) ([]*Page, error) {
 	sort.Slice(pages, func(i, j int) bool { return pages[i].name > pages[j].name })
 
 	feed, blogindex, buf := defaultFeed, 0, strings.Builder{}
@@ -135,7 +135,7 @@ func processFill(pages []*Page) ([]*Page, error) {
 	pages[blogindex].Header = blogIndexHeader()
 
 	// create atom
-	p, err := atomPage(feed)
+	p, err := atomPage(feed, out)
 	if err != nil {
 		return nil, fmt.Errorf("create atom: %w", err)
 	}
@@ -146,7 +146,7 @@ func processFill(pages []*Page) ([]*Page, error) {
 	for i := range all {
 		all[i] = []byte(pages[i].URLCanonical)
 	}
-	p, err = NewPage("sitemap.txt", bytes.Join(all, []byte("\n")), true)
+	p, err = NewPage(filepath.Join(out, "sitemap.txt"), bytes.Join(all, []byte("\n")), true)
 	if err != nil {
 		return nil, fmt.Errorf("fill sitemap.txt: %w", err)
 	}
@@ -209,7 +209,7 @@ func canonical(p string) string {
 	return p
 }
 
-func atomPage(feed atom.Feed) (*Page, error) {
+func atomPage(feed atom.Feed, out string) (*Page, error) {
 	var buf bytes.Buffer
 	e := xml.NewEncoder(&buf)
 	e.Indent("", "\t")
@@ -217,7 +217,7 @@ func atomPage(feed atom.Feed) (*Page, error) {
 	if err != nil {
 		return nil, fmt.Errorf("fill encode atom: %w", err)
 	}
-	p, err := NewPage("feed.atom", buf.Bytes(), true)
+	p, err := NewPage(filepath.Join(out, "feed.atom"), buf.Bytes(), true)
 	if err != nil {
 		return nil, fmt.Errorf("fill feed.atom: %w", err)
 	}
