@@ -64,12 +64,11 @@ body {
 header {
   display: grid;
   grid:
-    [r1-s] ".    .    .    title title" 1fr [r1-e]
-    [r1-s] ".    .    .    tag   tag" 1fr [r2-e]
-    [r3-s] ".    .    .    .     ." 1fr [r3-e]
-    [r4-s] "logo logo logo logo  logo" 1fr [r4-e]
-    / 1fr 1fr 1fr 1fr 1fr;
-  height: 80vh;
+    [r1-s] ".    .    .    title title" 20vh [r1-e]
+    [r1-s] ".    .    .    tag   tag" 20vh [r2-e]
+    [r3-s] ".    .    .    .     ." 20vh [r3-e]
+    [r4-s] "logo logo logo logo  logo" 20vh [r4-e]
+    / 20vh 20vh 20vh 20vh 20vh;
   padding: 2vmin;
 }
 header h1 {
