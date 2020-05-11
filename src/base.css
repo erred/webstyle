@@ -99,6 +99,7 @@ main {
 main > * {
   grid-column: 2 / span 1;
 }
+main > iframe,
 main > picture,
 main > pre,
 main > table {
