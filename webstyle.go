@@ -206,6 +206,10 @@ pre code {
   padding: 0;
 }
 
+iframe {
+  margin: auto;
+}
+
 em {
   color: #a06be0;
   background-color: unset;
