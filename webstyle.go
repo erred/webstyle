@@ -68,7 +68,7 @@ header {
     [r1-s] ".    .    .    tag   tag" 20vh [r2-e]
     [r3-s] ".    .    .    .     ." 20vh [r3-e]
     [r4-s] "logo logo logo logo  logo" 20vh [r4-e]
-    / 20vw 20vw 20vw 20vw 20vw;
+    / 1fr 1fr 1fr 1fr 1fr;
   padding: 2vmin;
 }
 header h1 {
@@ -109,6 +109,7 @@ main {
 main > * {
   grid-column: 2 / span 1;
 }
+main > iframe,
 main > picture,
 main > pre,
 main > table {
