@@ -25,6 +25,21 @@ const (
       })(window, document, "script", "dataLayer", "GTM-TLVN7D6");
     </script>
     <!-- End Google Tag Manager -->
+    <script type="module" nonce="deadbeef3">
+      import { getCLS, getFID, getLCP } from "https://static.seankhliao.com/web-vitals-module-v0.2.2.js";
+      function sendToGoogleAnalytics({ name, delta, id }) {
+        dataLayer.push({
+          event: "web-vitals",
+          event_category: "Web Vitals",
+          event_action: name,
+          event_value: Math.round(name === "CLS" ? delta * 1000 : delta),
+          event_label: id,
+        });
+      }
+      getCLS(sendToGoogleAnalytics);
+      getFID(sendToGoogleAnalytics);
+      getLCP(sendToGoogleAnalytics);
+    </script>
 
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1" />
@@ -89,7 +104,7 @@ const (
       <a href="https://github.com/seankhliao">github</a>
     </footer>
 
-    <script nonce="deadbeef3">
+    <script nonce="deadbeef4">
       let ts0 = new Date();
       let dst = "";
       document.querySelectorAll("a").forEach((el) => {
