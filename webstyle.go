@@ -46,6 +46,8 @@ const (
 
     <title>{{ .Title }}</title>
 
+    <link rel="stylesheet" href="https://static.seankhliao.com/base.css" />
+
     <link rel="canonical" href="{{ .URLCanonical }}" />
     <link rel="manifest" href="/manifest.json" />
     <link rel="alternate" type="application/atom+xml" title="seankhliao.com" href="https://seankhliao.com/feed.atom" />
