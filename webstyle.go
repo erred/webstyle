@@ -11,6 +11,19 @@ const (
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <link rel="preload" href="https://static.seankhliao.com/base.css" as="style" crossorigin />
+    <link rel="preload" href="https://static.seankhliao.com/web-vitals-module-v0.2.2.js" as="script" crossorigin />
+    <link
+      rel="preload"
+      href="https://static.seankhliao.com/inconsolata-var.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link rel="preload" href="https://static.seankhliao.com/lora-var.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preconnect" href="https://www.googletagmanager.com" />
+    <link rel="preconnect" href="https://www.google-analytics.com" />
+
     <!-- Google Tag Manager -->
     <script nonce="deadbeef2">
       (function (w, d, s, l, i) {
