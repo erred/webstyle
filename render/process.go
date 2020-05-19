@@ -41,20 +41,21 @@ var (
 )
 
 type Options struct {
-	In              string
-	Out             string
-	Template        *template.Template
-	GoogleAnalytics string
-	URLBase         string
-	URLLogger       string
+	In        string
+	Out       string
+	Template  *template.Template
+	URLBase   string
+	URLLogger string
+
+	Analytics bool
 }
 
 func (o *Options) InitFlags(fs *flag.FlagSet) {
 	fs.StringVar(&o.In, "in", "src", "input directory")
 	fs.StringVar(&o.Out, "out", "public", "output directory")
-	fs.StringVar(&o.GoogleAnalytics, "ga", "UA-114337586-1", "google analytics id")
 	fs.StringVar(&o.URLBase, "base", "https://seankhliao.com", "base url")
 	fs.StringVar(&o.URLLogger, "logger", "https://statslogger.seankhliao.com/form", "statslogger url")
+	fs.BoolVar(&o.Analytics, "analytics", true, "include analytics")
 }
 
 func Process(o Options) error {
@@ -94,11 +95,11 @@ func processInput(o Options) ([]*Page, error) {
 		}
 	}
 	for i := range pages {
-		pages[i].GoogleAnalytics = o.GoogleAnalytics
 		pages[i].URLBase = o.URLBase
 		pages[i].URLLogger = o.URLLogger
 		pages[i].URLAbsolute = canonical(strings.TrimPrefix(pages[i].name, o.In))
 		pages[i].URLCanonical = o.URLBase + pages[i].URLAbsolute
+		pages[i].Analytics = o.Analytics
 		if pages[i].name != o.In {
 			r, err := filepath.Rel(o.In, pages[i].name)
 			if err == nil {

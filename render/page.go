@@ -26,12 +26,13 @@ type Page struct {
 	Title       string
 
 	// filled, supplied to ExecuteTemplate
-	GoogleAnalytics string // GA ID
-	Main            string // html content
-	URLAbsolute     string // start from /
-	URLBase         string // https://... without trailing /
-	URLCanonical    string // URLBase + URLAbsolute
-	URLLogger       string
+	Main         string // html content
+	URLAbsolute  string // start from /
+	URLBase      string // https://... without trailing /
+	URLCanonical string // URLBase + URLAbsolute
+	URLLogger    string
+
+	Analytics bool
 }
 
 func NewPageFromFile(fpath string) (*Page, error) {

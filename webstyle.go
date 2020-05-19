@@ -7,12 +7,76 @@ import (
 
 const (
         
+        AnalyticsCustomGohtml = `{{ define "AnalyticsCustomGohtml" }}
+{{ if .Analytics }}
+<script nonce="deadbeef4">
+  let ts0 = new Date();
+  let dst = "";
+  document.querySelectorAll("a").forEach((el) => {
+    el.addEventListener("click", (e) => {
+      dst = e.target.href.replace(/(^\w+:|^)\/\//, "");
+    });
+  });
+  window.addEventListener("unload", () => {
+    ts1 = new Date();
+    navigator.sendBeacon(`+"`"+`{{ .URLLogger }}?trigger=beacon&src={{ .URLCanonical }}&dst=${dst}&dur=${ts1 - ts0}ms`+"`"+`);
+  });
+</script>
+{{ end }}
+{{ end }}`
+        
+        AnalyticsFallbackGohtml = `{{ define "AnalyticsFallbackGohtml" }}
+{{ if .Analytics }}
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TLVN7D6"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+{{ end }}
+{{ end }}`
+        
+        AnalyticsLoadGohtml = `{{ define "AnalyticsLoadGohtml" }}
+{{ if .Analytics }}
+<link rel="preload" href="https://static.seankhliao.com/web-vitals-module-v0.2.2.js" as="script" crossorigin />
+<link rel="preconnect" href="https://www.googletagmanager.com" />
+<link rel="preconnect" href="https://www.google-analytics.com" crossorigin />
+
+<!-- Google Tag Manager -->
+<script nonce="deadbeef2">
+  (function (w, d, s, l, i) {
+    w[l] = w[l] || [];
+    w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+    var f = d.getElementsByTagName(s)[0],
+      j = d.createElement(s),
+      dl = l != "dataLayer" ? "&l=" + l : "";
+    j.async = true;
+    j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+    f.parentNode.insertBefore(j, f);
+  })(window, document, "script", "dataLayer", "GTM-TLVN7D6");
+</script>
+<!-- End Google Tag Manager -->
+
+<script type="module" nonce="deadbeef3">
+  import { getCLS, getFID, getLCP } from "https://static.seankhliao.com/web-vitals-module-v0.2.2.js";
+  function sendToGoogleAnalytics({ name, delta, id }) {
+    dataLayer.push({
+      event: "web-vitals",
+      event_category: "Web Vitals",
+      event_action: name,
+      event_value: Math.round(name === "CLS" ? delta * 1000 : delta),
+      event_label: id,
+    });
+  }
+  getCLS(sendToGoogleAnalytics);
+  getFID(sendToGoogleAnalytics);
+  getLCP(sendToGoogleAnalytics);
+</script>
+{{ end }}
+{{ end }}`
+        
         LayoutGohtml = `{{ define "LayoutGohtml" }}
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <link rel="preload" href="https://static.seankhliao.com/base.css" as="style" crossorigin />
-    <link rel="preload" href="https://static.seankhliao.com/web-vitals-module-v0.2.2.js" as="script" crossorigin />
     <link
       rel="preload"
       href="https://static.seankhliao.com/inconsolata-var.woff2"
@@ -21,38 +85,9 @@ const (
       crossorigin
     />
     <link rel="preload" href="https://static.seankhliao.com/lora-var.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preconnect" href="https://www.googletagmanager.com" />
-    <link rel="preconnect" href="https://www.google-analytics.com" />
 
-    <!-- Google Tag Manager -->
-    <script nonce="deadbeef2">
-      (function (w, d, s, l, i) {
-        w[l] = w[l] || [];
-        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
-        var f = d.getElementsByTagName(s)[0],
-          j = d.createElement(s),
-          dl = l != "dataLayer" ? "&l=" + l : "";
-        j.async = true;
-        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
-        f.parentNode.insertBefore(j, f);
-      })(window, document, "script", "dataLayer", "GTM-TLVN7D6");
-    </script>
-    <!-- End Google Tag Manager -->
-    <script type="module" nonce="deadbeef3">
-      import { getCLS, getFID, getLCP } from "https://static.seankhliao.com/web-vitals-module-v0.2.2.js";
-      function sendToGoogleAnalytics({ name, delta, id }) {
-        dataLayer.push({
-          event: "web-vitals",
-          event_category: "Web Vitals",
-          event_action: name,
-          event_value: Math.round(name === "CLS" ? delta * 1000 : delta),
-          event_label: id,
-        });
-      }
-      getCLS(sendToGoogleAnalytics);
-      getFID(sendToGoogleAnalytics);
-      getLCP(sendToGoogleAnalytics);
-    </script>
+    <!-- prettier-ignore -->
+    {{ template "AnalyticsLoadGohtml" . }}
 
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1" />
@@ -78,9 +113,7 @@ const (
     </style>
   </head>
   <body>
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TLVN7D6"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
+    {{ template "AnalyticsFallbackGohtml" . }}
 
     <header>
       <h1>
@@ -119,19 +152,7 @@ const (
       <a href="https://github.com/seankhliao">github</a>
     </footer>
 
-    <script nonce="deadbeef4">
-      let ts0 = new Date();
-      let dst = "";
-      document.querySelectorAll("a").forEach((el) => {
-        el.addEventListener("click", (e) => {
-          dst = e.target.href.replace(/(^\w+:|^)\/\//, "");
-        });
-      });
-      window.addEventListener("unload", () => {
-        ts1 = new Date();
-        navigator.sendBeacon(`+"`"+`{{ .URLLogger }}?trigger=beacon&src={{ .URLCanonical }}&dst=${dst}&dur=${ts1 - ts0}ms`+"`"+`);
-      });
-    </script>
+    {{ template "AnalyticsCustomGohtml" . }}
   </body>
 </html>
 {{ end }}`
@@ -144,6 +165,12 @@ var (
 
 func all() *template.Template {
         t := template.New("")
+        
+        t = template.Must(t.New("AnalyticsCustomGohtml").Parse(AnalyticsCustomGohtml))
+        
+        t = template.Must(t.New("AnalyticsFallbackGohtml").Parse(AnalyticsFallbackGohtml))
+        
+        t = template.Must(t.New("AnalyticsLoadGohtml").Parse(AnalyticsLoadGohtml))
         
         t = template.Must(t.New("LayoutGohtml").Parse(LayoutGohtml))
         
