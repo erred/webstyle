@@ -98,7 +98,6 @@ const (
 
     <link rel="canonical" href="{{ .URLCanonical }}" />
     <link rel="manifest" href="/manifest.json" />
-    <link rel="alternate" type="application/atom+xml" title="seankhliao.com" href="https://seankhliao.com/feed.atom" />
 
     <meta name="theme-color" content="#000000" />
     <meta name="description" content="{{ .Description }}" />

@@ -103,7 +103,7 @@ func processFill(pages []*Page, out string) ([]*Page, error) {
 	}
 
 	buf.WriteString("</ul>\n")
-	pages[blogindex].Main = buf.String()
+	pages[blogindex].Main += "\n" + buf.String()
 	pages[blogindex].Header = blogIndexHeader()
 
 	// create sitemap
