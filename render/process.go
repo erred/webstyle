@@ -2,7 +2,6 @@ package render
 
 import (
 	"bytes"
-	"encoding/xml"
 	"flag"
 	"fmt"
 	"os"
@@ -11,33 +10,6 @@ import (
 	"sort"
 	"strings"
 	"text/template"
-	"time"
-
-	"golang.org/x/tools/blog/atom"
-)
-
-var (
-	defaultFeed = atom.Feed{
-		Title: "author's web log",
-		ID:    "tag:seankhliao.com,2020:seankhliao.com",
-		Link: []atom.Link{
-			{
-				Rel:  "self",
-				Href: "https://seankhliao.com/feed.atom",
-				Type: "application/atom+xml",
-			}, {
-				Rel:  "alternate",
-				Href: "https://seankhliao.com/blog/",
-				Type: "text/html",
-			},
-		},
-		Updated: atom.Time(time.Now()),
-		Author: &atom.Person{
-			Name:  "Sean Liao",
-			URI:   "https://seankhliao.com/",
-			Email: "blog-atom@seankhliao.com",
-		},
-	}
 )
 
 type Options struct {
@@ -113,7 +85,7 @@ func processInput(o Options) ([]*Page, error) {
 func processFill(pages []*Page, out string) ([]*Page, error) {
 	sort.Slice(pages, func(i, j int) bool { return pages[i].name > pages[j].name })
 
-	feed, blogindex, buf := defaultFeed, 0, strings.Builder{}
+	blogindex, buf := 0, strings.Builder{}
 	buf.WriteString("<ul>\n")
 	for i, p := range pages {
 		if strings.Contains(p.name, "/blog/") {
@@ -121,7 +93,6 @@ func processFill(pages []*Page, out string) ([]*Page, error) {
 				pages[i].Date = filepath.Base(p.name)[:10]
 				pages[i].Header = blogHeader(pages[i].Date)
 				buf.WriteString(blogLink(p.Date, p.URLAbsolute, p.Title))
-				feed.Entry = append(feed.Entry, blogEntry(p, feed.Author))
 			} else {
 				blogindex = i
 			}
@@ -135,19 +106,12 @@ func processFill(pages []*Page, out string) ([]*Page, error) {
 	pages[blogindex].Main = buf.String()
 	pages[blogindex].Header = blogIndexHeader()
 
-	// create atom
-	p, err := atomPage(feed, out)
-	if err != nil {
-		return nil, fmt.Errorf("create atom: %w", err)
-	}
-	pages = append(pages, p)
-
 	// create sitemap
 	all := make([][]byte, len(pages))
 	for i := range all {
 		all[i] = []byte(pages[i].URLCanonical + "?utm_source=sitemap&utm_medium=txt&utm_campaign=sitemap.txt")
 	}
-	p, err = NewPage(filepath.Join(out, "sitemap.txt"), bytes.Join(all, []byte("\n")), true)
+	p, err := NewPage(filepath.Join(out, "sitemap.txt"), bytes.Join(all, []byte("\n")), true)
 	if err != nil {
 		return nil, fmt.Errorf("fill sitemap.txt: %w", err)
 	}
@@ -210,21 +174,6 @@ func canonical(p string) string {
 	return p
 }
 
-func atomPage(feed atom.Feed, out string) (*Page, error) {
-	var buf bytes.Buffer
-	e := xml.NewEncoder(&buf)
-	e.Indent("", "\t")
-	err := e.Encode(feed)
-	if err != nil {
-		return nil, fmt.Errorf("fill encode atom: %w", err)
-	}
-	p, err := NewPage(filepath.Join(out, "feed.atom"), buf.Bytes(), true)
-	if err != nil {
-		return nil, fmt.Errorf("fill feed.atom: %w", err)
-	}
-	return p, nil
-}
-
 func blogIndexHeader() string {
 	return `<h2><a href="/blog/">b<em>log</em></a></h2>
 <p>Artisanal, <em>hand-crafted</em> blog posts imbued with delayed <em>regrets</em></p>`
@@ -238,20 +187,6 @@ func blogHeader(date string) string {
 func blogLink(date, urlabsolute, title string) string {
 	return fmt.Sprintf(`<li><time datetime="%s">%s</time> | <a href="%s">%s</a></li>`+"\n",
 		date, date, urlabsolute, title)
-}
-
-func blogEntry(p *Page, author *atom.Person) *atom.Entry {
-	return &atom.Entry{
-		Title: p.Title,
-		Link: []atom.Link{
-			{Rel: "alternate", Href: p.URLCanonical, Type: "text/html"},
-		},
-		ID:        p.URLCanonical,
-		Published: atom.TimeStr(p.Date + "T00:00:00Z"),
-		Updated:   atom.TimeStr(p.Date + "T00:00:00Z"),
-		Author:    author,
-		Summary:   &atom.Text{Type: "text", Body: p.Title},
-	}
 }
 
 func imgHack(html string) string {
