@@ -109,7 +109,8 @@ func processFill(pages []*Page, out string) ([]*Page, error) {
 	// create sitemap
 	all := make([][]byte, len(pages))
 	for i := range all {
-		all[i] = []byte(pages[i].URLCanonical + "?utm_source=sitemap&utm_medium=txt&utm_campaign=sitemap.txt")
+		all[i] = []byte(pages[i].URLCanonical)
+		// + "?utm_source=sitemap&utm_medium=txt&utm_campaign=sitemap.txt"
 	}
 	p, err := NewPage(filepath.Join(out, "sitemap.txt"), bytes.Join(all, []byte("\n")), true)
 	if err != nil {
