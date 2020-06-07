@@ -35,7 +35,7 @@ const (
         
         AnalyticsLoadGohtml = `{{ define "AnalyticsLoadGohtml" }}
 {{ if .Analytics }}
-<link rel="preload" href="https://static.seankhliao.com/web-vitals-module-v0.2.2.js" as="script" crossorigin />
+<link rel="preload" href="https://seankhliao.com/web-vitals-module-v0.2.2.js" as="script" crossorigin />
 <link rel="preconnect" href="https://www.googletagmanager.com" />
 <link rel="preconnect" href="https://www.google-analytics.com" crossorigin />
 
@@ -55,7 +55,7 @@ const (
 <!-- End Google Tag Manager -->
 
 <script type="module" nonce="deadbeef3">
-  import { getCLS, getFID, getLCP } from "https://static.seankhliao.com/web-vitals-module-v0.2.2.js";
+  import { getCLS, getFID, getLCP } from "https://seankhliao.com/web-vitals-module-v0.2.2.js";
   function sendToGoogleAnalytics({ name, delta, id }) {
     dataLayer.push({
       event: "web-vitals",
@@ -76,15 +76,15 @@ const (
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <link rel="preload" href="https://static.seankhliao.com/base.css" as="style" crossorigin />
+    <link rel="preload" href="https://seankhliao.com/base.css" as="style" crossorigin />
     <link
       rel="preload"
-      href="https://static.seankhliao.com/inconsolata-var.woff2"
+      href="https://seankhliao.com/inconsolata-var.woff2"
       as="font"
       type="font/woff2"
       crossorigin
     />
-    <link rel="preload" href="https://static.seankhliao.com/lora-var.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="https://seankhliao.com/lora-var.woff2" as="font" type="font/woff2" crossorigin />
 
     <!-- prettier-ignore -->
     {{ template "AnalyticsLoadGohtml" . }}
@@ -94,7 +94,7 @@ const (
 
     <title>{{ .Title }}</title>
 
-    <link rel="stylesheet" href="https://static.seankhliao.com/base.css" crossorigin />
+    <link rel="stylesheet" href="https://seankhliao.com/base.css" crossorigin />
 
     <link rel="canonical" href="{{ .URLCanonical }}" />
     <link rel="manifest" href="/manifest.json" />
@@ -102,9 +102,9 @@ const (
     <meta name="theme-color" content="#000000" />
     <meta name="description" content="{{ .Description }}" />
 
-    <link rel="icon" type="image/png" sizes="512x512" href="https://static.seankhliao.com/icon-512.png" />
-    <link rel="apple-touch-icon" href="https://static.seankhliao.com/icon-512.png" />
-    <link rel="shortcut icon" href="https://static.seankhliao.com/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="512x512" href="https://seankhliao.com/icon-512.png" />
+    <link rel="apple-touch-icon" href="https://seankhliao.com/icon-512.png" />
+    <link rel="shortcut icon" href="https://seankhliao.com/favicon.ico" />
 
     <style nonce="deadbeef1">
       /* prettier-ignore */
