@@ -35,12 +35,11 @@ const (
         
         AnalyticsLoadGohtml = `{{ define "AnalyticsLoadGohtml" }}
 {{ if .Analytics }}
-<link rel="preload" href="https://seankhliao.com/web-vitals-module-v0.2.2.js" as="script" crossorigin />
 <link rel="preconnect" href="https://www.googletagmanager.com" />
 <link rel="preconnect" href="https://www.google-analytics.com" crossorigin />
 
 <!-- Google Tag Manager -->
-<script nonce="deadbeef2">
+<script type="module" nonce="deadbeef2">
   (function (w, d, s, l, i) {
     w[l] = w[l] || [];
     w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
@@ -51,12 +50,10 @@ const (
     j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
     f.parentNode.insertBefore(j, f);
   })(window, document, "script", "dataLayer", "GTM-TLVN7D6");
-</script>
-<!-- End Google Tag Manager -->
 
-<script type="module" nonce="deadbeef3">
-  import { getCLS, getFID, getLCP } from "https://seankhliao.com/web-vitals-module-v0.2.2.js";
-  function sendToGoogleAnalytics({ name, delta, id }) {
+ import {getCLS, getFCP, getFID, getLCP, getTTFB} from 'https://unpkg.com/web-vitals@0.2.4/dist/web-vitals.es5.min.js?module';
+
+  function sendGTM({ name, delta, id }) {
     dataLayer.push({
       event: "web-vitals",
       event_category: "Web Vitals",
@@ -65,9 +62,12 @@ const (
       event_label: id,
     });
   }
-  getCLS(sendToGoogleAnalytics);
-  getFID(sendToGoogleAnalytics);
-  getLCP(sendToGoogleAnalytics);
+
+  getCLS(sendGTM);
+  getFCP(sendGTM);
+  getFID(sendGTM);
+  getLCP(sendGTM);
+  getTTFB(sendGTM);
 </script>
 {{ end }}
 {{ end }}`
