@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/russross/blackfriday/v2"
+	"github.com/yuin/goldmark"
 	"sigs.k8s.io/yaml"
 )
 
@@ -66,16 +66,10 @@ func NewPage(name string, data []byte, pass bool) (*Page, error) {
 	}
 	if filepath.Ext(p.name) == ".md" {
 		p.name = strings.TrimSuffix(p.name, "md") + "html"
-		p.Main = string(blackfriday.Run(
-			p.data,
-			blackfriday.WithRenderer(
-				blackfriday.NewHTMLRenderer(
-					blackfriday.HTMLRendererParameters{
-						Flags: blackfriday.CommonHTMLFlags,
-					},
-				),
-			),
-		))
+
+		var buf bytes.Buffer
+		goldmark.Convert(p.data, &buf)
+		p.Main = buf.String()
 	}
 	return &p, nil
 }
