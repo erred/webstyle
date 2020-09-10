@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/yuin/goldmark"
+	"github.com/yuin/goldmark/extension"
 	"sigs.k8s.io/yaml"
 )
 
@@ -68,7 +69,10 @@ func NewPage(name string, data []byte, pass bool) (*Page, error) {
 		p.name = strings.TrimSuffix(p.name, "md") + "html"
 
 		var buf bytes.Buffer
-		goldmark.Convert(p.data, &buf)
+		err := goldmark.New(goldmark.WithExtensions(extension.Table)).Convert(p.data, &buf)
+		if err != nil {
+			return nil, err
+		}
 		p.Main = buf.String()
 	}
 	return &p, nil
