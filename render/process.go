@@ -191,7 +191,7 @@ func blogLink(date, urlabsolute, title string) string {
 }
 
 func imgHack(html string) string {
-	r := regexp.MustCompile(`<h4><img src="(.*?).webp" alt="(.*?)" /></h4>`)
+	r := regexp.MustCompile(`<h4><img src="(.*?).webp" alt="(.*?)"></h4>`)
 	return r.ReplaceAllString(html, `
 <picture>
         <source type="image/webp" srcset="$1.webp">

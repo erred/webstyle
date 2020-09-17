@@ -3,7 +3,7 @@ FROM golang:alpine AS build
 WORKDIR /workspace
 ENV CGO_ENABLED=0
 COPY . .
-RUN go build -o /bin/webrender ./cmd/webrender
+RUN go build -trimpath -o /bin/webrender ./cmd/webrender
 
 FROM scratch
 
