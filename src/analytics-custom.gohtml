@@ -9,7 +9,7 @@
   });
   window.addEventListener("unload", () => {
     ts1 = new Date();
-    navigator.sendBeacon(`{{ .URLLogger }}?trigger=beacon&src={{ .URLCanonical }}&dst=${dst}&dur=${ts1 - ts0}ms`);
+    navigator.sendBeacon(`{{ .URLLogger }}?src={{ .URLCanonical }}&dst=${dst}&dur=${ts1 - ts0}ms&referrer=${document.referrer}`);
   });
 </script>
 {{ end }}

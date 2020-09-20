@@ -26,7 +26,7 @@ func (o *Options) InitFlags(fs *flag.FlagSet) {
 	fs.StringVar(&o.In, "in", "src", "input directory")
 	fs.StringVar(&o.Out, "out", "public", "output directory")
 	fs.StringVar(&o.URLBase, "base", "https://seankhliao.com", "base url")
-	fs.StringVar(&o.URLLogger, "logger", "https://statslogger.seankhliao.com/form", "statslogger url")
+	fs.StringVar(&o.URLLogger, "logger", "https://statslogger.seankhliao.com/beacon", "statslogger url")
 	fs.BoolVar(&o.Analytics, "analytics", true, "include analytics")
 }
 
