@@ -17,18 +17,10 @@ steps:
           --secret=docker-registry-creds \
           --format='get(payload.data)' \
           | tr '_-' '/+' \
-          | base64 -d > /kaniko/.docker/config.json \
-        && \
-        gcloud secrets versions access latest \
-          --secret=cluster-kubectl-creds \
-          --format='get(payload.data)' \
-          | tr '_-' '/+' \
-          | base64 -d > /kube/config
+          | base64 -d > /kaniko/.docker/config.json
     volumes:
       - name: registry-creds
         path: /kaniko/.docker
-      - name: cluster-creds
-        path: /kube
 
   - id: build-push
     name: gcr.io/kaniko-project/executor:latest
