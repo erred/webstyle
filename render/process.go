@@ -10,6 +10,8 @@ import (
 	"sort"
 	"strings"
 	"text/template"
+
+	"go.seankhliao.com/webstyle"
 )
 
 type Options struct {
@@ -19,7 +21,8 @@ type Options struct {
 	URLBase   string
 	URLLogger string
 
-	Analytics bool
+	Analytics  bool
+	EmbedStyle bool
 }
 
 func (o *Options) InitFlags(fs *flag.FlagSet) {
@@ -28,6 +31,7 @@ func (o *Options) InitFlags(fs *flag.FlagSet) {
 	fs.StringVar(&o.URLBase, "base", "https://seankhliao.com", "base url")
 	fs.StringVar(&o.URLLogger, "logger", "https://statslogger.seankhliao.com/beacon", "statslogger url")
 	fs.BoolVar(&o.Analytics, "analytics", true, "include analytics")
+	fs.BoolVar(&o.EmbedStyle, "embedstyle", false, "use inlined css")
 }
 
 func Process(o Options) error {
@@ -131,6 +135,10 @@ func processOutput(o Options, pages []*Page) error {
 		if p.pass {
 			_, err = f.Write(p.data)
 		} else {
+			if o.EmbedStyle {
+				p.Style = webstyle.StyleGohtml + "\n" + p.Style
+			}
+
 			err = o.Template.ExecuteTemplate(f, "LayoutGohtml", p)
 		}
 		f.Close()
